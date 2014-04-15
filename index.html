@@ -1,0 +1,203 @@
+<html>
+<head>
+	<title>Turing Machine Simulator</title>
+	<!--  JS  -->
+	<script src='js/jquery.js'></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script src='js/kinetic-v5.1.0.min.js'></script>
+	<script src='js/my.js'></script>
+
+	<!--  CSS  -->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+
+<body>
+<div class="alert alert-info">
+	
+	<center>
+		<h5>Turing Machine Simulator</h5>
+		<a style=";cursor:pointer" data-toggle="modal" data-target="#readme">Read me</a>
+	<center>
+</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="">
+							<button class="btn btn-default btn-sm" id="add-state"><span class="glyphicon glyphicon-plus"></span> Add state</button>
+							<button class="btn btn-default btn-sm" id="start-simulation"><span class="glyphicon glyphicon-play-circle"></span> Simulation</button>
+							<button class="btn btn-default btn-sm" id="generate-matrix"><span class="glyphicon glyphicon-align-justify" ></span> Generate Matrix</button>
+							<button class="btn btn-default btn-sm" id="save"><span class="glyphicon glyphicon-download"></span> Graph To XML</button>
+							<button class="btn btn-default btn-sm" id="load"><span class="glyphicon glyphicon-upload"></span> XML To Graph</button>
+							<button class="btn btn-success btn-sm" id="resize-plus"><span class="glyphicon glyphicon-zoom-in"></span></button>
+							<button class="btn btn-danger btn-sm" id="resize-moin"><span class="glyphicon glyphicon-zoom-out"></span></button>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div id="simul-input" style="display:none">
+							<div class="form-inline well" style="margin-bottom:5px;">
+								Symbols :<input type="text" class="form-control" id="symbols"/>
+								Time : <input type="text" class="form-control" id="time" value="2000"/>
+								<div class="btn-group" data-toggle="buttons">
+									<button class="btn btn-success btn-sm" id="play">
+										<span class="glyphicon glyphicon-play"></span>
+									</button>
+
+									<button class="btn btn-danger btn-sm" id="pause">
+										<span class="glyphicon glyphicon-pause"></span>
+									</button>
+
+									<button class="btn btn-info btn-sm" id="reset">
+										<span class="glyphicon glyphicon glyphicon-repeat"></span>
+									</button>
+								</div>
+								
+							</div>
+							<div >
+								<ul id="rubbon" class="jumbotron" style="margin-bottom:5px;margin-top:5px;"></ul>
+								<div id="rub-info" class="alert alert-info"></div>
+							</div>
+						</div>
+						<section id="gcontainer">
+							<div id='graph' ></div>
+						</section>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="panel panel-success">
+					<div class="panel-heading" >
+						<div class="row" style="padding:10px;">
+							<center><h4>Properties</h4></center>
+							<div >
+								<div id="cell-props" style="display:none">
+									<input type="text" class="form-control" id="cell-name" placeholder="State name" data-toggle="tooltip" data-placement="left" title="State Name">
+									<button class="btn btn-danger btn-sm col-md-12" id="submit-cell-props" style="margin-top:5px">Submit</button>
+									<div id="error-name" style="color:red"></div>
+								</div>
+
+								<div id="edge-props" style="display:none">
+									<input type="text" class="form-control" id="edge-read" placeholder="Read" data-toggle="tooltip" data-placement="left" title="Edge Read">
+									<input type="text" class="form-control" id="edge-write" placeholder="Write" data-toggle="tooltip" data-placement="left" title="Edge Write">
+									<h4>Direction</h4>
+									<div class="radio">
+										<label>
+										  <input type="radio" name="optionsRadios" id="right" value="option1" checked>
+										  Right
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+										  <input type="radio" name="optionsRadios" id="left" value="option2">
+										  Left
+										</label>
+									</div>
+									<button class="btn btn-danger btn-sm col-md-12" id="submit-edge-props">Submit</button>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2" id="state-menu">
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" id="connectTo">Connect To</a></li>
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" id="delete-cell">Delete</a></li>
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" id="initial">Set as Initial State</a></li>
+		</ul>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2" id="edge-menu">
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" id="delete-edge">Delete</a></li>
+		</ul>
+	</div>
+
+	<div class="modal fade" id="error">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title"></h3>
+				</div>
+				<div class="modal-body"></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="readme">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">Read Me</h3>
+				</div>
+				<div class="modal-body">
+			      	This project was realized using <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> and <a href="http://kineticjs.com/" target="_blank">Kineticjs</a>.</br>
+			      	You can download the source from <a href="#" target="_blank">github</a>.</br>
+			      	<h4>Instructions:</h4>
+			      	<ul>
+				      	<li>To add state click "Add State" button</li></br>
+				      	<li>To connect two states : right click on a state and choose "Connect To" menu , then click on the target state.</li></br>
+				      	<li>Left click on a state or edge will show "Properties" on the right where you can edit properties of selected item.</li></br>
+				      	<li>Every graph must have an intial state ,to set an initial state : right click on a state and select "Set As initial state" menu.</li></br>
+				      	<li>After finishing drawing your graph you can start simulation by clicking "Simulation" button then you can insert your symbols for simulation.</li></br>
+				      	<li>You can import/export the graph as XML for future use.</li>
+			      	</ul>
+			      		<div class="alert alert-danger">
+			      			<center>
+			      				<h4><b>Note: The "&" symbol represents the empty symbol.</b><h4>
+			      			</center>
+			      			<h6>This simulator does not detect ambigus Turing Machine so please check your input before starting simulation to avoid any incoherent result.</h6>
+			      		</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="xml">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">XML Generation</h3>
+				</div>
+				<div class="modal-body">
+			      	<textarea class="form-control" rows="10"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="load-xml">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">Write yout XML</h3>
+				</div>
+				<div class="modal-body">
+			      	<textarea class="form-control" rows="10" id="xml-content"></textarea>
+			      	<button class="btn btn-success" id="load2">Submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="tm-matrix">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">Turning Machine Matrix</h3>
+				</div>
+				<div class="modal-body">
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
